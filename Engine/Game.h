@@ -7,6 +7,7 @@
 class Mesh;
 class Shader;
 class Texture;
+class Model;
 
 class Game
 {
@@ -31,6 +32,7 @@ public:
 	static void SetFPSCapped(bool value);
 
 	void AddMesh(Mesh* mesh);
+	void AddModel(Model* model);
 	void AddTexture(Texture* texture);
 	void AddShader(Shader* shader);
 
@@ -48,6 +50,7 @@ private:
 	std::vector<Mesh*> m_meshes;
 	std::vector<Shader*> m_shaders;
 	std::vector<Texture*> m_textures;
+	std::vector<Model*> m_models;
 
 
 };

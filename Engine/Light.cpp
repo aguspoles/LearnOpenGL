@@ -47,7 +47,7 @@ void Light::UpdateComposite()
 	static float counter = 0.0f;
 	float sinCounter = sinf(counter);
 	float absSinCounter = abs(sinCounter);
-	transform->GetPos()->z = sinCounter * Game::DeltaTime() * 200;
+	transform->GetPos()->z = sinCounter * Game::DeltaTime() * 100;
 	transform->UpdateModelMatrix();
 	counter += 0.01f;
 }

@@ -48,9 +48,18 @@ Game::~Game()
 			shader = NULL;
 		}
 	}
+	for each(Model* model in m_models)
+	{
+		if (model)
+		{
+			delete model;
+			model = NULL;
+		}
+	}
 	m_meshes.clear();
 	m_shaders.clear();
 	m_textures.clear();
+	m_models.clear();
 }
 
 void Game::Render()
@@ -60,8 +69,8 @@ void Game::Render()
 void Game::Init()
 {
 	display = new Display(DISPLAY_WIDTH, DISPLAY_HEIGHT, "OpenGL");
-
 	camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+	TheInputHandler::Instance();
 
 	vector<unsigned int> lightIndices = { 0, 1, 2,
 		0, 2, 3,
@@ -133,11 +142,11 @@ void Game::Init()
 	AddShader(shader);
 	AddShader(lightShader);
 	AddShader(nano);
+	AddModel(nanosuit);
 
 	Root.AddComponent(light);
 	Root.AddComponent(player);
 	Root.Init();
-	TheInputHandler::Instance();
 }
 
 void Game::Update()
@@ -216,6 +225,11 @@ void Game::SetFPSCapped(bool value)
 void Game::AddMesh(Mesh* mesh)
 {
 	m_meshes.push_back(mesh);
+}
+
+void Game::AddModel(Model * model)
+{
+	m_models.push_back(model);
 }
 
 void Game::AddTexture(Texture * texture)

@@ -45,15 +45,15 @@ void Player::InitComposite()
 	glUniform3f(glGetUniformLocation(m_shader->ID, "material.diffuse"), 0.75164, 0.60648, 0.22648);
 	glUniform3f(glGetUniformLocation(m_shader->ID, "material.specular"), 0.628281, 0.555802, 0.366065);*/
 	//cyan plastic
-	glUniform3f(glGetUniformLocation(m_shader->ID, "material.ambient"), 0.0f, 0.1f, 0.06f);
+	/*glUniform3f(glGetUniformLocation(m_shader->ID, "material.ambient"), 0.0f, 0.1f, 0.06f);
 	glUniform3f(glGetUniformLocation(m_shader->ID, "material.diffuse"), 0.0f, 0.50980392f, 0.50980392f);
-	glUniform3f(glGetUniformLocation(m_shader->ID, "material.specular"), 0.50196078f, 0.50196078f, 0.50196078f);
+	glUniform3f(glGetUniformLocation(m_shader->ID, "material.specular"), 0.50196078f, 0.50196078f, 0.50196078f);*/
 	//cyan rubber
 	//glUniform3f(glGetUniformLocation(m_shader->ID, "material.ambient"), 0.0, 0.05, 0.05);
 	//glUniform3f(glGetUniformLocation(m_shader->ID, "material.diffuse"), 0.4, 0.5, 0.5);
 	//glUniform3f(glGetUniformLocation(m_shader->ID, "material.specular"), 0.04, 0.7, 0.7);
 
-	glUniform1f(glGetUniformLocation(m_shader->ID, "material.shininess"), 32.0);
+	glUniform1f(glGetUniformLocation(m_shader->ID, "material.shininess"), 64.0);
 	//glUniform3f(glGetUniformLocation(shaderProgram, "light.ambient"), 0.2, 0.2, 0.2);
 	//glUniform3f(glGetUniformLocation(shaderProgram, "light.diffuse"), 0.5, 0.5, 0.5);
 	glUniform3f(glGetUniformLocation(m_shader->ID, "light.ambient"), 1.0, 1.0, 1.0);
@@ -68,13 +68,13 @@ void Player::SetShaderProperties()
 
 	///light color change over time
 	//glm::vec3 lightColor;
-	//lightColor.x = sin(SDL_GetTicks()/1000 * 2.0f);
-	//lightColor.y = sin(SDL_GetTicks() / 1000 * 0.7f);
-	//lightColor.z = sin(SDL_GetTicks() / 1000 *1.3f);
+	//lightColor.x = sin(Game::TimeMs() * 2.0f);
+	//lightColor.y = sin(Game::TimeMs() * 0.7f);
+	//lightColor.z = sin(Game::TimeMs()*1.3f);
 	//glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f); // decrease the influence
 	//glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // low influence
-	//glUniform3f(glGetUniformLocation(shaderProgram, "light.ambient"), ambientColor.x, ambientColor.y, ambientColor.z);
-	//glUniform3f(glGetUniformLocation(shaderProgram, "light.diffuse"), diffuseColor.x, diffuseColor.y, diffuseColor.z);
+	//glUniform3f(glGetUniformLocation(m_shader->ID, "light.ambient"), ambientColor.x, ambientColor.y, ambientColor.z);
+	//glUniform3f(glGetUniformLocation(m_shader->ID, "light.diffuse"), diffuseColor.x, diffuseColor.y, diffuseColor.z);
 
 	glUniform3f(glGetUniformLocation(m_shader->ID, "light.position"), lightPos.x, lightPos.y, lightPos.z);
 	glUniform3f(glGetUniformLocation(m_shader->ID, "viewPos"), viewPos.x, viewPos.y, viewPos.z);
