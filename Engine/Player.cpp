@@ -68,9 +68,9 @@ void Player::SetShaderProperties()
 
 	///light color change over time
 	//glm::vec3 lightColor;
-	//lightColor.x = sin(Game::TimeMs() * 2.0f);
-	//lightColor.y = sin(Game::TimeMs() * 0.7f);
-	//lightColor.z = sin(Game::TimeMs()*1.3f);
+	//lightColor.x = sin(Game::Time() * 2.0f);
+	//lightColor.y = sin(Game::Time() * 0.7f);
+	//lightColor.z = sin(Game::Time()*1.3f);
 	//glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f); // decrease the influence
 	//glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // low influence
 	//glUniform3f(glGetUniformLocation(m_shader->ID, "light.ambient"), ambientColor.x, ambientColor.y, ambientColor.z);

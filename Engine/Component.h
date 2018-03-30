@@ -3,8 +3,8 @@
 
 class Component
 {
-	class Composite* parent;
 private:
+	class Composite* parent;
 protected:
 
 public:

@@ -70,6 +70,7 @@ void Game::Init()
 {
 	display = new Display(DISPLAY_WIDTH, DISPLAY_HEIGHT, "OpenGL");
 	camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+	//instantiate inputHandler
 	TheInputHandler::Instance();
 
 	vector<unsigned int> lightIndices = { 0, 1, 2,
@@ -124,7 +125,6 @@ void Game::Init()
 	
 	Model* nanosuit = new Model("../res/nanosuit/nanosuit.obj");
 	Shader* shader = new Shader("../res/lightShader.vs", "../res/lightShader.fs");
-	Shader* nano = new Shader("../res/nano.vs", "../res/nano.fs");
 	Shader* lightShader = new Shader("../res/lightSource.vs", "../res/lightSource.fs");
 	/*Texture* texture1 = new Texture("../res/bricks.jpg");
 	Texture* texture2 = new Texture("../res/mini.jpg");*/
@@ -141,7 +141,6 @@ void Game::Init()
 	AddTexture(texture2);*/
 	AddShader(shader);
 	AddShader(lightShader);
-	AddShader(nano);
 	AddModel(nanosuit);
 
 	Root.AddComponent(light);
@@ -158,7 +157,7 @@ void Game::Run()
 {
 	Init();
 
-	_lastFrameMs = TimeMs();
+	_lastFrameMs = Time();
 
 	while (!glfwWindowShouldClose(display->window))
 	{
@@ -196,14 +195,15 @@ void Game::HandleEvents()
 }
 
 
-float Game::TimeMs()
+float Game::Time()
 {
+	//return time in seconds
 	return glfwGetTime();
 }
 
 void Game::ManageTime()
 {
-	_currentFrameMs = TimeMs();
+	_currentFrameMs = Time();
 	_deltaTime = (_currentFrameMs - _lastFrameMs);
 	_lastFrameMs = _currentFrameMs;
 	_timeSinceLastUpdate += _deltaTime;

@@ -26,7 +26,7 @@ public:
 	void HandleEvents();
 	static bool isRunning;
 
-	static float TimeMs();
+	static float Time();
 	static void ManageTime();
 	static float DeltaTime();
 	static void SetFPSCapped(bool value);
