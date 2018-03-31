@@ -27,6 +27,7 @@ uniform vec3 viewPos;
 void main()
 {
         vec3 norm = normalize(normal0);
+
         vec3 lightDir = normalize(light.position - FragPos);
 
 //specular

@@ -1,5 +1,6 @@
 #include "Player.h"
-#include "Game.h"
+#include "Application.h"
+#include "Time.h"
 #include "InputHandler.h"
 
 Player::Player() : m_moveLeft(false), m_moveRight(false)
@@ -16,16 +17,13 @@ Player::~Player()
 void Player::UpdateComposite()
 {
 	HandleInput();
-	static float counter = 0.0f;
-	float sinCounter = sinf(counter);
-	float absSinCounter = abs(sinCounter);
 
 	if(m_moveLeft)
-		transform->GetPos()->x -= 5 * Game::DeltaTime();
+		transform->GetPos()->x -= 5 * Time::deltaTime;
 	if(m_moveRight)
-		transform->GetPos()->x += 5 * Game::DeltaTime();
+		transform->GetPos()->x += 5 * Time::deltaTime;
 
-	transform->GetRot()->y = counter * Game::DeltaTime() * 100;
+	transform->GetRot()->y = Time::GetTime() * 0.5f;
 	//GetTransform()->GetRot()->z = counter * Game::DeltaTime() * 50;
 	//GetTransform()->GetPos()->z = -10;
 	transform->GetPos()->y = -1.0;
@@ -33,8 +31,6 @@ void Player::UpdateComposite()
 	transform->GetScale()->y = 0.15;
 	transform->GetScale()->z = 0.15;
 	transform->UpdateModelMatrix();
-
-	counter += 0.01f;
 }
 
 void Player::InitComposite()
@@ -63,8 +59,8 @@ void Player::InitComposite()
 
 void Player::SetShaderProperties()
 {
-	glm::vec3 lightPos = *Game::light->transform->GetPos();
-	glm::vec3 viewPos = Game::camera->Position;
+	glm::vec3 lightPos = *Application::light->transform->GetPos();
+	glm::vec3 viewPos = Camera::MainCamera->Position;
 
 	///light color change over time
 	//glm::vec3 lightColor;

@@ -1,11 +1,18 @@
 #include "display.h"
-#include "InputHandler.h"
 #include <iostream>
 
-Display::Display(unsigned int width, unsigned int height, const std::string& title)
+Display* Display::_instance = NULL;
+unsigned int Display::SCR_WIDTH = 0;
+unsigned int Display::SCR_HEIGHT = 0;
+GLFWwindow* Display::window = NULL;
+std::string Display::TITLE = "";
+
+Display::Display(unsigned int width, unsigned int height, const std::string title)
 {
 	SCR_WIDTH = width;
 	SCR_HEIGHT = height;
+	TITLE = title;
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -40,19 +47,30 @@ Display::Display(unsigned int width, unsigned int height, const std::string& tit
 	glEnable(GL_DEPTH_TEST);
 }
 
+Display* Display::Instance()
+{
+	if (_instance)
+		return _instance;
+	else if(SCR_WIDTH <= 0 || SCR_HEIGHT <= 0)
+		return _instance = new Display(800, 600, "DefaultWindow");
+	return _instance = new Display(SCR_WIDTH, SCR_HEIGHT, TITLE);
+}
+
 Display::~Display()
 {
+	if (_instance)
+		delete _instance;
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }
 
-void Display::Clear(float r, float g, float b, float a)
+void Display::Clear(float r, float g, float b, float a) const
 {
 	glClearColor(r, g, b, a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Display::SwapBuffers()
+void Display::SwapBuffers() const
 {
 	glfwSwapBuffers(window);
 }

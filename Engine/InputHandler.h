@@ -4,6 +4,7 @@
 #include <GLFW\glfw3.h>
 #include <vector>
 #include <glm\glm.hpp>
+#include <iostream>
 
 enum Mouse_Buttons {
 	LEFT_CLICK = 0,

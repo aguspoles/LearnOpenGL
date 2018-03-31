@@ -1,29 +1,16 @@
 #include "Game.h"
-#include "camera.h"
-#include "display.h"
-#include "Player.h"
 #include "InputHandler.h"
-#include "Model.h"
+#include "Time.h"
+#include "display.h"
 
-float Game::_deltaTime = 0;
-float Game::_timePerFrameCap = 1.0f / 60.0f; //60 fps
-bool Game::_fpsCapped = true;
-float Game::_timeSinceLastUpdate = 0;
-float Game::_currentFrameMs = 0;
-float Game::_lastFrameMs = 0;
 bool Game::isRunning = true;
-Light* Game::light = NULL;
-Display* Game::display = NULL;
-Camera* Game::camera = NULL;
 
 Game::Game()
 {
-
 }
 
 Game::~Game()
 {
-	delete camera;
 	for each(Mesh* mesh in m_meshes)
 	{
 		if (mesh)
@@ -62,116 +49,30 @@ Game::~Game()
 	m_models.clear();
 }
 
-void Game::Render()
-{
-}
-
-void Game::Init()
-{
-	display = new Display(DISPLAY_WIDTH, DISPLAY_HEIGHT, "OpenGL");
-	camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-	//instantiate inputHandler
-	TheInputHandler::Instance();
-
-	vector<unsigned int> lightIndices = { 0, 1, 2,
-		0, 2, 3,
-
-		6, 5, 4,
-		7, 6, 4,
-
-		10, 9, 8,
-		11, 10, 8,
-
-		12, 13, 14,
-		12, 14, 15,
-
-		16, 17, 18,
-		16, 18, 19,
-
-		22, 21, 20,
-		23, 22, 20
-	};
-	std::vector<glm::vec3> lightVertices = {
-		glm::vec3(-1, -1, -1),
-		glm::vec3(-1, 1, -1),
-		glm::vec3(1, 1, -1),
-		glm::vec3(1, -1, -1),
-
-		glm::vec3(-1, -1, 1),
-		glm::vec3(-1, 1, 1),
-		glm::vec3(1, 1, 1), 
-		glm::vec3(1, -1, 1),
-
-		glm::vec3(-1, -1, -1),
-		glm::vec3(-1, -1, 1),
-		glm::vec3(1, -1, 1),
-		glm::vec3(1, -1, -1),
-
-		glm::vec3(-1, 1, -1),
-		glm::vec3(-1, 1, 1),
-		glm::vec3(1, 1, 1), 
-		glm::vec3(1, 1, -1),
-
-		glm::vec3(-1, -1, -1),
-		glm::vec3(-1, -1, 1),
-		glm::vec3(-1, 1, 1),
-		glm::vec3(-1, 1, -1),
-
-		glm::vec3(1, -1, -1),
-		glm::vec3(1, -1, 1),
-		glm::vec3(1, 1, 1), 
-		glm::vec3(1, 1, -1)
-	};
-	
-	Model* nanosuit = new Model("../res/nanosuit/nanosuit.obj");
-	Shader* shader = new Shader("../res/lightShader.vs", "../res/lightShader.fs");
-	Shader* lightShader = new Shader("../res/lightSource.vs", "../res/lightSource.fs");
-	/*Texture* texture1 = new Texture("../res/bricks.jpg");
-	Texture* texture2 = new Texture("../res/mini.jpg");*/
-
-	Player* player = new Player;
-	player->SetModel(nanosuit);
-	player->SetShader(shader);
-
-	light = new Light(lightVertices, lightIndices);
-	light->SetShader(lightShader);
-	light->Color = glm::vec3(1.0, 0, 0);
-
-	/*AddTexture(texture1);
-	AddTexture(texture2);*/
-	AddShader(shader);
-	AddShader(lightShader);
-	AddModel(nanosuit);
-
-	Root.AddComponent(light);
-	Root.AddComponent(player);
-	Root.Init();
-}
-
-void Game::Update()
-{
-
-}
-
 void Game::Run()
 {
 	Init();
 
-	_lastFrameMs = Time();
+	_timePerFrame = 1.0f / FRAME_CAP;//time to render 1 frame
+	_fpsCapped = false;
+	_lastFrameTime = Time::GetTime();
 
-	while (!glfwWindowShouldClose(display->window))
+	while (!glfwWindowShouldClose(Display::window))
 	{
 		ManageTime();
 
 		if (_fpsCapped)
 		{
-			while (_timeSinceLastUpdate > _timePerFrameCap)
+			while (_timeSinceLastUpdate > _timePerFrame)
 			{
-				_timeSinceLastUpdate -= _timePerFrameCap;
+				_timeSinceLastUpdate -= _timePerFrame;
 
 				HandleEvents();
 				Update();
 				Root.Update();
+
+				if (glfwWindowShouldClose(Display::window))
+					continue;
 			}
 		}
 		else
@@ -180,11 +81,17 @@ void Game::Run()
 			Update();
 			Root.Update();
 		}
-		display->Clear(0.0f, .0f, 0.0f, 1.0f);
+		if (_frameCounter >= Time::SECOND) {
+			cout << "FPS:" << _frames << endl;
+			_frames = 0;
+			_frameCounter = 0;
+		}
+		Display::Instance()->Clear(0.0f, .0f, 0.0f, 1.0f);
 
 		Root.Render();
+		_frames++;
 
-		display->SwapBuffers();
+		Display::Instance()->SwapBuffers();
 		glfwPollEvents();
 	}
 }
@@ -194,27 +101,15 @@ void Game::HandleEvents()
 	TheInputHandler::Instance()->Update();
 }
 
-
-float Game::Time()
-{
-	//return time in seconds
-	return glfwGetTime();
-}
-
 void Game::ManageTime()
 {
-	_currentFrameMs = Time();
-	_deltaTime = (_currentFrameMs - _lastFrameMs);
-	_lastFrameMs = _currentFrameMs;
-	_timeSinceLastUpdate += _deltaTime;
-}
+	_currentFrameTime = Time::GetTime();
+	_deltaTime = _currentFrameTime - _lastFrameTime;
+	_lastFrameTime = _currentFrameTime;
+	_timeSinceLastUpdate += _deltaTime / Time::SECOND;
 
-float Game::DeltaTime()
-{
-	if (_fpsCapped)
-		return _timePerFrameCap;
-	else
-		return _deltaTime;
+	_frameCounter += _deltaTime;
+	Time::deltaTime = _deltaTime;
 }
 
 void Game::SetFPSCapped(bool value)

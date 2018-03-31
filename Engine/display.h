@@ -8,17 +8,20 @@
 class Display
 {
 public:
-	Display(unsigned int width, unsigned int height, const std::string& title);
+	static Display* Instance();
 	virtual ~Display();
 
-	void Clear(float r, float g, float b, float a);
-	void SwapBuffers();
-	GLFWwindow* window;
-	unsigned int SCR_WIDTH;
-    unsigned int SCR_HEIGHT;
+	static GLFWwindow* window;
+	static unsigned int SCR_WIDTH;
+    static unsigned int SCR_HEIGHT;
+	static std::string TITLE;
 
-protected:
+	void Clear(float r, float g, float b, float a) const;
+	void SwapBuffers() const;
+
 private:
+	static Display* _instance;
+	Display(unsigned int width, unsigned int height, const std::string title);
 };
 
 #endif

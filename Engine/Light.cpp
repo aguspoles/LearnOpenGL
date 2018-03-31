@@ -1,5 +1,6 @@
 #include "Light.h"
-#include "Game.h"
+#include "Camera.h"
+#include "Time.h"
 #include "shader.h"
 #include <iostream>
 
@@ -36,20 +37,16 @@ void Light::InitComposite()
 	transform->GetPos()->x = 1.2;
 	transform->GetPos()->y = 1.0;
 	transform->GetPos()->z = -2.0;
-	transform->GetScale()->x = 0.5;
-	transform->GetScale()->y = 0.5;
-	transform->GetScale()->z = 0.5;
+	transform->GetScale()->x = 0.3;
+	transform->GetScale()->y = 0.3;
+	transform->GetScale()->z = 0.3;
 	transform->UpdateModelMatrix();
 }
 
 void Light::UpdateComposite()
 {
-	static float counter = 0.0f;
-	float sinCounter = sinf(counter);
-	float absSinCounter = abs(sinCounter);
-	transform->GetPos()->z = sinCounter * Game::DeltaTime() * 100;
+	transform->GetPos()->z = cos(Time::GetTime()) * 5;
 	transform->UpdateModelMatrix();
-	counter += 0.01f;
 }
 
 void Light::RenderComposite(glm::mat4 modelMatrix)
@@ -57,8 +54,8 @@ void Light::RenderComposite(glm::mat4 modelMatrix)
 	m_shader->use();
 
 	m_shader->setMat4("model", transform->GetModelMatrix());
-	m_shader->setMat4("view", Game::camera->GetViewMatrix());
-	m_shader->setMat4("projection", Game::camera->GetProjectionMatrix());
+	m_shader->setMat4("view", Camera::MainCamera->GetViewMatrix());
+	m_shader->setMat4("projection", Camera::MainCamera->GetProjectionMatrix());
 
 	glBindVertexArray(m_vertexArrayObject);
 

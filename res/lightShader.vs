@@ -16,8 +16,12 @@ void main()
 {
         //we need normalMatrix to change normal vectors to worldspace
         mat3 normalMatrix = mat3(transpose(inverse(model))); //should be done on cpu and send as uniform because inverse function is a costly operation
+
 	gl_Position = projection * view * model * vec4(position, 1.0);
+
         FragPos = vec3(model * vec4(position, 1.0));
+
 	texCoord0 = texCoord;
+
 	normal0 = (normalMatrix * normal); //now if we aplly a non-uniform scale the normlas wont be affected
 }

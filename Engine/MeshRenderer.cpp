@@ -1,5 +1,5 @@
 #include "MeshRenderer.h"
-#include "Game.h"
+#include "Camera.h"
 
 
 MeshRenderer::MeshRenderer() : m_shader(NULL)
@@ -27,8 +27,8 @@ void MeshRenderer::RenderComposite(glm::mat4 modelMatrix)
 	SetShaderProperties();
 
 	m_shader->setMat4("model", transform->GetModelMatrix());
-	m_shader->setMat4("view", Game::camera->GetViewMatrix());
-	m_shader->setMat4("projection", Game::camera->GetProjectionMatrix());
+	m_shader->setMat4("view", Camera::MainCamera->GetViewMatrix());
+	m_shader->setMat4("projection", Camera::MainCamera->GetProjectionMatrix());
 
 	m_model->Draw(*m_shader);
 }

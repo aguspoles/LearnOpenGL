@@ -1,9 +1,9 @@
-#include "Game.h"
+#include "Application.h"
 
 
 int main()
 {
-	Game* g = new Game;
+	Application* g = new Application;
 	g->Run();
 	return 0;
 }
